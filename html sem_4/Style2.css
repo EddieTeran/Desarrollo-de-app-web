@@ -1,0 +1,240 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    width: 100%;
+    /* Ancho del 80% de la ventana */
+    margin: 0 auto;
+    /* Centrar el contenido */
+}
+
+@media (max-width: 600px) {
+    body {
+        background-color: rgb(32, 78, 94);
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+    body {
+        background-color: lightgreen;
+        font-size: 16px;
+    }
+}
+
+@media (min-width: 1025px) {
+    body {
+        background-color: rgb(133, 133, 19);
+        font-size: 18px;
+    }
+}
+
+/* Encabezado */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #000;
+    background-color: #b1d0ec;
+}
+
+
+
+
+.logo-container {
+    margin-bottom: 20px;
+}
+
+.logo {
+    width: 180px;
+    /* Controla el tamaño del logo aquí */
+    height: auto;
+    border-radius: 50%;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+h1 {
+    color: #000000;
+    font-size: large;
+    margin-bottom: 10px;
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-style: oblique;
+    background-color: #d8b4fe;
+}
+
+/* Artículo */
+article {
+    background-color: rgb(182, 147, 170);
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 3px 10px rgba(146, 233, 204, 0.1);
+    text-align: center;
+}
+
+article p {
+    font-size: 1.1rem;
+    color: #050505;
+    line-height: 1.8;
+}
+
+strong {
+    color: #8a2be2;
+    font-weight: bold;
+}
+
+/* Contenedor de categorías */
+.cont {
+    background: linear-gradient(135deg, #f3e6ff 0%, #d8b4fe 100%);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.cont h2 {
+    color: #8a2be2;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+/* Lista de categorías */
+ol {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    list-style: none;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+ol a {
+    text-decoration: none;
+    color: white;
+    background-color: #8a2be2;
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: inline-block;
+    min-width: 150px;
+}
+
+ol a:hover {
+    background-color: #6a1b9a;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Diseño responsivo */
+
+.container1 {
+    width: 75vw;
+    max-width: 400px;
+    min-width: 320px;
+    margin: auto;
+}
+
+img {
+    width: 100%;
+    border-radius: 15px;
+}
+
+.container {
+    display: flex;
+    /* Activa Flexbox */
+    justify-content: space-around;
+    /* Espacio uniforme entre elementos */
+    align-items: center;
+    /* Centra verticalmente los elementos */
+    height: 500px;
+    background-color: lightgray;
+}
+
+.vneg , .vroj , .fneg {
+    background-color: #4caf50;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 5px;
+    width: 250px;
+}
+
+.vneg , .vroj , .fneg{
+    display: flex;
+    /* Activa Flexbox */
+    justify-content: space-around;
+    /* Espacio uniforme entre elementos */
+    align-items: center;
+    /* Centra verticalmente los elementos */
+    height: 500px;
+    background-color: lightgray;
+
+}
+.vid {
+    background-color: #b1d0ec;
+    text-align: center;
+}
+
+.video {
+    display: flex;
+    /* Activa Flexbox */
+    justify-content: space-around;
+    /* Espacio uniforme entre elementos */
+    align-items: center;
+    /* Centra verticalmente los elementos */
+    height: 500px;
+    
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow:auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.tab{
+    border-radius: 10px;
+    background-size:contain;
+    background-color:rgb(174, 211, 211);
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+.tab thead {
+    font-size: 20px;
+    border-radius: 10px;
+    background-size:contain;
+    background-color: rgb(161, 124, 173);
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+.tab tbody {
+    font-size: 20px;
+    border-radius: 10px;
+    background-size:contain;
+    background-color: rgb(223, 207, 230);
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+}
+.redes {
+    background-color: #f3e6ff;
+    text-align: left;
+    font-size: 20px;
+}

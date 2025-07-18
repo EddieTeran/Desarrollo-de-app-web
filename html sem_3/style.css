@@ -1,0 +1,145 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+
+body {
+
+    color: black;
+    font-family: 'Times New Roman', Times, serif;
+
+}
+
+article {
+    color: black;
+    text-decoration: none;
+    background: rgb(250, 253, 255);
+    padding: 5px 10px;
+    border-radius: 10px;
+    margin: 10px 50px;
+    float: left;
+
+}
+
+h1 {
+    color: rgb(13, 54, 90);
+    text-align: center;
+    font-style: oblique;
+    margin: 30px 30px;
+}
+
+header {
+    background: url("img/logo1.jpg");
+    height: 500px;
+    background-size: contain;
+    background-repeat: repeat;
+
+
+}
+
+section {
+    min-width: 1000px;
+    margin: auto;
+    padding: 30px 0;
+}
+
+
+section h2 {
+    margin: 50px;
+}
+
+.cont {
+    text-align: center;
+}
+
+.cont p {
+    font-weight: bold;
+    margin: 1en 0;
+}
+
+.cont a {
+    color: black;
+    text-decoration: none;
+    background: rgb(21, 192, 92);
+    padding: 5px 30px;
+    border-radius: 20px;
+    margin: 20px;
+}
+---------------------------------------------------------------------
+img {
+    background-size:contain;
+    background-color: rgb(219, 205, 223);
+    max-width: 500px;
+    height: 500px;
+    border-radius: 0px;
+    margin-bottom: 0px;
+}
+.menu {
+    border-radius: 10px;
+    background-size:contain;
+    background-color: rgb(219, 205, 223);
+    margin: 10px;
+    padding: 10px;
+    text-align: center;  
+}
+
+.vid{
+    border-radius: 10px;
+    background-size:contain;
+    background-color: rgb(164, 154, 167);
+    margin: 0px;
+    padding: 0px;
+    text-align: center; 
+}
+
+
+video {
+    
+    background-size:contain;
+    background-color: rgb(219, 205, 223);
+    max-width: 500px;
+    height: 500px;
+    border-radius: 0px;
+    margin-bottom: 0px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow:auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.tab{
+    border-radius: 10px;
+    background-size:contain;
+    background-color:rgb(174, 211, 211);
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+.tab thead {
+    font-size: 20px;
+    border-radius: 10px;
+    background-size:contain;
+    background-color: rgb(161, 124, 173);
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+.tab tbody {
+    font-size: 20px;
+    border-radius: 10px;
+    background-size:contain;
+    background-color: rgb(223, 207, 230);
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+}

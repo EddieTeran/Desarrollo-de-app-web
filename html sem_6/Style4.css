@@ -1,0 +1,330 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    width: 100%;
+    /* Ancho del 80% de la ventana */
+    margin: 0 auto;
+    /* Centrar el contenido */
+}
+
+@media (max-width: 600px) {
+    body {
+        background-color: rgb(32, 78, 94);
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+    body {
+        background-color: lightgreen;
+        font-size: 16px;
+    }
+}
+
+@media (min-width: 1025px) {
+    body {
+        background-color: rgb(133, 133, 19);
+        font-size: 18px;
+    }
+}
+
+/* Encabezado */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #000;
+    background-color: #b1d0ec;
+}
+
+
+.logo-container {
+    margin-bottom: 20px;
+}
+
+.logo {
+    width: 180px;
+    /* Controla el tamaño del logo aquí */
+    height: auto;
+    border-radius: 50%;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+h1 {
+    color: #000000;
+    font-size: large;
+    margin-bottom: 10px;
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-style: oblique;
+    background-color: #d8b4fe;
+}
+
+/* Artículo */
+article {
+    background-color: rgb(184, 165, 177);
+    padding: 25px;
+    border-radius: 10px;
+    
+    box-shadow: 0 3px 10px rgba(146, 233, 204, 0.1);
+    text-align: center;
+}
+
+article p {
+    font-size: 1.1rem;
+    color: #050505;
+    line-height: 1.8;
+}
+
+strong {
+    color: #8a2be2;
+    font-weight: bold;
+}
+
+
+/* Contenedor de categorías */
+.cont {
+    background: linear-gradient(135deg, #f3e6ff 0%, #d8b4fe 100%);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+ul {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    list-style: none;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+ul a:hover {
+    background-color: #cdc2d3;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+ul a {
+    text-decoration: none;
+    color: rgb(17, 16, 16);
+    background-color: #2a78c0;
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: inline-block;
+    min-width: 150px;
+}
+
+
+/* Lista de categorías */
+ol {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    list-style: none;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+ol a {
+    text-decoration: none;
+    color: white;
+    background-color: #a57fc5;
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: inline-block;
+    min-width: 150px;
+}
+
+ol a:hover {
+    background-color: #6a1b9a;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Diseño responsivo */
+
+.container1 {
+    width: 75vw;
+    max-width: 400px;
+    min-width: 320px;
+    margin: auto;
+}
+
+img {
+    width: 100%;
+    border-radius: 15px;
+}
+
+
+
+.container {
+    display: flex;
+    /* Activa Flexbox */
+    justify-content: space-around;
+    /* Espacio uniforme entre elementos */
+    flex-wrap: wrap;
+    background-color: #dbaed2;
+    
+}
+
+.vneg , .vroj , .fneg {
+    padding: 20px;
+    text-align: center;
+    border-radius: 5px;
+    width: 250px;
+    border: 1px solid #ddd;
+    margin: 10px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.vneg , .vroj , .fneg{
+    display: flex;
+    /* Activa Flexbox */
+    justify-content: space-around;
+    /* Espacio uniforme entre elementos */
+    align-items: center;
+    /* Centra verticalmente los elementos */
+    height: 500px;
+    background-color: rgb(182, 152, 152);
+
+}
+
+.video {
+    display: flex;
+    /* Activa Flexbox */
+    justify-content: space-around;
+    /* Espacio uniforme entre elementos */
+    align-items: center;
+    /* Centra verticalmente los elementos */
+    height: 500px;
+    background-color: #e0e3e7;
+    
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow:auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.tab{
+    background-size:contain;
+    background-color:rgb(174, 211, 211);
+    padding: 10px;
+    text-align: center;
+}
+
+.tab thead {
+    font-size: 20px;
+    border-radius: 10px;
+    background-size:contain;
+    background-color: rgb(161, 124, 173);
+    text-align: center;
+}
+
+.tab tbody {
+    font-size: 20px;
+    border-radius: 10px;
+    background-size:contain;
+    background-color: rgb(223, 207, 230);
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+}
+.redes {
+    background-color: #f3e6ff;
+    text-align: left;
+    font-size: 20px;
+}
+
+
+
+.input-container {
+    background-color: #be98bb;
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+
+    
+}
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    background-color: #e7e7f1;
+}
+.gallery img {
+    width: 100%;
+    height: auto;
+    border: 2px solid transparent;
+    transition: border 0.3s, box-shadow 0.3s;
+}
+.gallery img.selected {
+    border: 2px solid #104da3;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    
+}
+
+.link {
+    background-color: #bd96d6;
+}
+
+button:hover {
+    background-color: #d7cde6;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+-------------------------------------------------------------------
+.form-container {
+    background-color: #1e4780;
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input.valid {
+    border-color: green;
+}
+
+input.invalid {
+    border-color: red;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    display: none;
+}
