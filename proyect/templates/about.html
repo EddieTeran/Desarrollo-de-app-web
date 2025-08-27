@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Sobre nosotros{% endblock %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+{% block content %}
+    <section class="about-section">
+        <h1>Caprichos Store</h1>
+        <p>Tu tienda de regalos y detalles únicos</p>
+        <div class="about-content">
+            <section>
+                <h2>¿Quiénes somos?</h2>
+                <p>En <strong>Caprichos Store</strong> nos apasiona sorprenderte con productos originales y personalizados. Desde 2015, ofrecemos regalos, accesorios y detalles para cada ocasión especial.</p>
+            </section>
+            <section>
+                <h2>Nuestra Misión</h2>
+                <p>Brindar experiencias inolvidables a través de productos únicos y atención personalizada.</p>
+            </section>
+            <section>
+                <h2>Nuestra Visión</h2>
+                <p>Ser la tienda favorita de regalos y detalles en la región, innovando y creciendo junto a nuestros clientes.</p>
+            </section>
+            <section>
+                <h2>Contacto</h2>
+                <p>¿Tienes dudas o sugerencias? Escríbenos a <a href="mailto:contacto@caprichosstore.com">contacto@caprichosstore.com</a></p>
+            </section>
+            <section>
+                <h2>Redes Sociales</h2>
+                <ul>
+                    <li><a href="https://www.facebook.com/caprichosstore" target="_blank">Facebook</a></li>
+                    <li><a href="https://www.instagram.com/caprichosstore" target="_blank">Instagram</a></li>
+                    <li><a href="https://wa.me/1234567890" target="_blank">WhatsApp</a></li>
+                </ul>
+            </section>
+        </div>
+    </section>
+{% endblock %}
