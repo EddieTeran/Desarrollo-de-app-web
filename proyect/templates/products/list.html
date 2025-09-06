@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}Productos - Caprichos Store{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Header Section -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">
+                <i class="fas fa-box text-primary"></i> Inventario de Productos
+            </h1>
+            <a class="btn btn-primary" href="{{ url_for('crear_producto') }}">
+                <i class="fas fa-plus"></i> Nuevo Producto
+            </a>
+        </div>
+
+        <!-- Search Form -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="get" action="{{ url_for('listar_productos') }}" class="row g-3">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="text" 
+                                   name="q" 
+                                   class="form-control" 
+                                   placeholder="Buscar por nombre del producto..." 
+                                   value="{{ q or '' }}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="d-grid gap-2 d-md-flex">
+                            <button type="submit" class="btn btn-outline-primary flex-fill">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                            <a href="{{ url_for('listar_productos') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Limpiar
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Products Table -->
+        {% if productos %}
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list"></i> 
+                        Lista de Productos 
+                        <span class="badge bg-light text-dark">{{ productos|length }}</span>
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th scope="col">
+                                        <i class="fas fa-image"></i> Imagen
+                                    </th>
+                                    <th scope="col">
+                                        <i class="fas fa-hashtag"></i> ID
+                                    </th>
+                                    <th scope="col">
+                                        <i class="fas fa-tag"></i> Nombre
+                                    </th>
+                                    <th scope="col" class="text-center">
+                                        <i class="fas fa-cubes"></i> Cantidad
+                                    </th>
+                                    <th scope="col" class="text-center">
+                                        <i class="fas fa-dollar-sign"></i> Precio
+                                    </th>
+                                    <th scope="col" class="text-center">
+                                        <i class="fas fa-cogs"></i> Acciones
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for p in productos %}
+                                <tr>
+                                    <td class="align-middle">
+                                        <img src="{{ p.get_image_url() }}" 
+                                             alt="{{ p.nombre }}" 
+                                             class="img-thumbnail" 
+                                             style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;"
+                                             data-bs-toggle="modal" 
+                                             data-bs-target="#imageModal{{ p.id }}"
+                                             title="Click para ver imagen completa">
+                                    </td>
+                                    <td class="align-middle">
+                                        <strong>{{ p.id }}</strong>
+                                    </td>
+                                    <td class="align-middle">
+                                        <span class="fw-bold">{{ p.nombre }}</span>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <span class="badge bg-{% if p.cantidad == 0 %}danger{% elif p.cantidad < 10 %}warning{% else %}success{% endif %}">
+                                            {{ p.cantidad }}
+                                        </span>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <span class="fw-bold text-success">
+                                            ${{ '%.2f'|format(p.precio) }}
+                                        </span>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <div class="btn-group" role="group">
+                                            <a class="btn btn-outline-primary btn-sm" 
+                                               href="{{ url_for('editar_producto', pid=p.id) }}"
+                                               title="Editar producto">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </a>
+                                            <form method="post" 
+                                                  action="{{ url_for('eliminar_producto', pid=p.id) }}" 
+                                                  style="display:inline"
+                                                  onsubmit="return confirm('¿Estás seguro de que deseas eliminar el producto {{ p.nombre }}? Esta acción no se puede deshacer.');">
+                                                <button type="submit" 
+                                                        class="btn btn-outline-danger btn-sm"
+                                                        title="Eliminar producto">
+                                                    <i class="fas fa-trash"></i> Eliminar
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Modal para vista ampliada de la imagen -->
+                                <div class="modal fade" id="imageModal{{ p.id }}" tabindex="-1" aria-labelledby="imageModalLabel{{ p.id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="imageModalLabel{{ p.id }}">
+                                                    <i class="fas fa-image"></i> {{ p.nombre }}
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-center">
+                                                <img src="{{ p.get_image_url() }}" 
+                                                     alt="{{ p.nombre }}" 
+                                                     class="img-fluid rounded"
+                                                     style="max-height: 500px;">
+                                            </div>
+                                            <div class="modal-footer justify-content-between">
+                                                <div class="text-start">
+                                                    <strong>Cantidad:</strong> {{ p.cantidad }} | 
+                                                    <strong>Precio:</strong> ${{ '%.2f'|format(p.precio) }}
+                                                </div>
+                                                <div>
+                                                    <a href="{{ url_for('editar_producto', pid=p.id) }}" class="btn btn-primary btn-sm">
+                                                        <i class="fas fa-edit"></i> Editar Producto
+                                                    </a>
+                                                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+                                                        <i class="fas fa-times"></i> Cerrar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <!-- Estado vacío -->
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-box-open fa-4x text-muted"></i>
+                    </div>
+                    <h4 class="text-muted">No hay productos para mostrar</h4>
+                    <p class="text-muted mb-4">
+                        {% if q %}
+                            No se encontraron productos que coincidan con "{{ q }}"
+                        {% else %}
+                            Aún no has agregado productos a tu inventario
+                        {% endif %}
+                    </p>
+                    <div>
+                        {% if q %}
+                            <a href="{{ url_for('listar_productos') }}" class="btn btn-outline-primary me-2">
+                                <i class="fas fa-list"></i> Ver todos los productos
+                            </a>
+                        {% endif %}
+                        <a href="{{ url_for('crear_producto') }}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Agregar primer producto
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- CSS adicional para mejorar la apariencia -->
+<style>
+    .img-thumbnail {
+        border: 2px solid #dee2e6;
+        transition: all 0.3s ease;
+    }
+    
+    .img-thumbnail:hover {
+        border-color: #007bff;
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .table td {
+        vertical-align: middle;
+    }
+    
+    .badge {
+        font-size: 0.9em;
+    }
+</style>
+{% endblock %}

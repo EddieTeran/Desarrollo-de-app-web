@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Contactos{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1>Contacta con Nuestra Tienda de Ropa</h1>
+<p>Si tienes preguntas sobre nuestros productos o quieres hacer un pedido, no dudes en contactarnos a través del formulario o en nuestras redes sociales.</p>
+
+<form action="/send_message" method="post">
+  <label for="name">Nombre:</label><br>
+  <input type="text" id="name" name="name" placeholder="Tu nombre" required><br><br>
+
+  <label for="email">Correo electrónico:</label><br>
+  <input type="email" id="email" name="email" placeholder="Tu correo electrónico" required><br><br>
+
+  <label for="message">Mensaje:</label><br>
+  <textarea id="message" name="message" rows="5" placeholder="Escribe tu mensaje aquí" required></textarea><br><br>
+
+  <input type="submit" value="Enviar">
+</form>
+
+<h2>O síguenos en nuestras redes sociales:</h2>
+<ul class="social-media-links">
+  <li><a href="https://www.facebook.com/tuempresa" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+  <li><a href="https://www.instagram.com/tuempresa" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+  <li><a href="https://twitter.com/tuempresa" target="_blank" rel="noopener noreferrer">Twitter</a></li>
+  <li><a href="https://www.linkedin.com/company/tuempresa" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+</ul>
+{% endblock %}

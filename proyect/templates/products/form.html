@@ -1,0 +1,320 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Nuevo' if modo == 'crear' else 'Editar' }} Producto - Caprichos Store{% endblock %}
+
+{% block head %}
+<style>
+    .image-preview {
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        background-color: #f8f9fa;
+        transition: all 0.3s ease;
+    }
+    
+    .image-preview:hover {
+        border-color: #007bff;
+        background-color: #e7f3ff;
+    }
+    
+    .image-preview.has-image {
+        border-style: solid;
+        border-color: #28a745;
+        background-color: #f8fff8;
+    }
+    
+    .preview-image {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .file-input-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+    }
+    
+    .file-input-custom {
+        position: absolute;
+        left: -9999px;
+    }
+    
+    .file-input-button {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+    
+    .file-input-button:hover {
+        background: linear-gradient(135deg, #0056b3, #004085);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">
+                    <i class="fas fa-{{ 'plus' if modo == 'crear' else 'edit' }}"></i>
+                    {{ 'Nuevo' if modo == 'crear' else 'Editar' }} Producto
+                </h3>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" id="productForm">
+                    {{ form.hidden_tag() }}
+                    
+                    <!-- Campo Nombre -->
+                    <div class="mb-3">
+                        {{ form.nombre.label(class="form-label fw-bold") }}
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-tag"></i>
+                            </span>
+                            {{ form.nombre(class="form-control" + (" is-invalid" if form.nombre.errors else "")) }}
+                        </div>
+                        {% for error in form.nombre.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Campos Cantidad y Precio -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.cantidad.label(class="form-label fw-bold") }}
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-cubes"></i>
+                                    </span>
+                                    {{ form.cantidad(class="form-control" + (" is-invalid" if form.cantidad.errors else "")) }}
+                                </div>
+                                {% for error in form.cantidad.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.precio.label(class="form-label fw-bold") }}
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-dollar-sign"></i>
+                                    </span>
+                                    {{ form.precio(class="form-control" + (" is-invalid" if form.precio.errors else "")) }}
+                                </div>
+                                {% for error in form.precio.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Campo de Imagen -->
+                    <div class="mb-4">
+                        {{ form.imagen.label(class="form-label fw-bold") }}
+                        
+                        <!-- Área de vista previa -->
+                        <div class="image-preview mb-3" id="imagePreview">
+                            {% if modo == 'editar' and producto and producto.imagen %}
+                                <img src="{{ producto.get_image_url() }}" 
+                                     alt="{{ producto.nombre }}" 
+                                     class="preview-image" 
+                                     id="previewImg">
+                                <div class="mt-2">
+                                    <small class="text-success">
+                                        <i class="fas fa-check-circle"></i> Imagen actual
+                                    </small>
+                                </div>
+                            {% else %}
+                                <div id="placeholderContent">
+                                    <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted mb-2">Click para subir una imagen</p>
+                                    <small class="text-muted">O arrastra y suelta aquí</small>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Input de archivo personalizado -->
+                        <div class="file-input-wrapper">
+                            {{ form.imagen(class="file-input-custom", id="fileInput") }}
+                            <button type="button" class="file-input-button" onclick="document.getElementById('fileInput').click()">
+                                <i class="fas fa-upload me-2"></i>
+                                {{ 'Cambiar imagen' if (modo == 'editar' and producto and producto.imagen) else 'Seleccionar imagen' }}
+                            </button>
+                        </div>
+                        
+                        <div class="form-text mt-2">
+                            <i class="fas fa-info-circle"></i>
+                            Formatos permitidos: JPG, PNG, GIF, WEBP. Tamaño máximo: 5MB.
+                        </div>
+                        
+                        {% for error in form.imagen.errors %}
+                            <div class="text-danger mt-2">
+                                <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                            </div>
+                        {% endfor %}
+                        
+                        <!-- Información de la imagen -->
+                        <div id="imageInfo" class="mt-2" style="display: none;">
+                            <small class="text-muted">
+                                <span id="fileName"></span> - <span id="fileSize"></span>
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <!-- Botones de acción -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('listar_productos') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                        {{ form.submit(class="btn btn-primary btn-lg") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript para funcionalidad avanzada -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('fileInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImg = document.getElementById('previewImg');
+    const placeholderContent = document.getElementById('placeholderContent');
+    const imageInfo = document.getElementById('imageInfo');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    
+    // Función para formatear el tamaño del archivo
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    
+    // Función para mostrar vista previa
+    function showPreview(file) {
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Crear o actualizar imagen de vista previa
+                if (!previewImg) {
+                    const img = document.createElement('img');
+                    img.id = 'previewImg';
+                    img.className = 'preview-image';
+                    img.alt = 'Vista previa';
+                    imagePreview.innerHTML = '';
+                    imagePreview.appendChild(img);
+                    
+                    const successMsg = document.createElement('div');
+                    successMsg.className = 'mt-2';
+                    successMsg.innerHTML = '<small class="text-success"><i class="fas fa-check-circle"></i> Imagen seleccionada</small>';
+                    imagePreview.appendChild(successMsg);
+                } else {
+                    previewImg.src = e.target.result;
+                }
+                
+                // Actualizar clase del contenedor
+                imagePreview.classList.add('has-image');
+                
+                // Mostrar información del archivo
+                fileName.textContent = file.name;
+                fileSize.textContent = formatFileSize(file.size);
+                imageInfo.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    
+    // Evento de cambio en el input de archivo
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            // Validar tamaño del archivo
+            if (file.size > 5 * 1024 * 1024) {
+                alert('El archivo es demasiado grande. El tamaño máximo es 5MB.');
+                this.value = '';
+                return;
+            }
+            
+            // Validar tipo de archivo
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('Tipo de archivo no permitido. Use JPG, PNG, GIF o WEBP.');
+                this.value = '';
+                return;
+            }
+            
+            showPreview(file);
+        }
+    });
+    
+    // Funcionalidad de drag & drop
+    imagePreview.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.style.borderColor = '#007bff';
+        this.style.backgroundColor = '#e7f3ff';
+    });
+    
+    imagePreview.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        if (!this.classList.contains('has-image')) {
+            this.style.borderColor = '#dee2e6';
+            this.style.backgroundColor = '#f8f9fa';
+        }
+    });
+    
+    imagePreview.addEventListener('drop', function(e) {
+        e.preventDefault();
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            showPreview(files[0]);
+        }
+    });
+    
+    // Click en el área de vista previa para seleccionar archivo
+    imagePreview.addEventListener('click', function() {
+        fileInput.click();
+    });
+    
+    // Validación del formulario antes de enviar
+    document.getElementById('productForm').addEventListener('submit', function(e) {
+        const nombre = document.querySelector('input[name="nombre"]').value.trim();
+        if (!nombre) {
+            e.preventDefault();
+            alert('El nombre del producto es obligatorio.');
+            return false;
+        }
+        
+        // Mostrar indicador de carga
+        const submitBtn = this.querySelector('input[type="submit"]');
+        const originalText = submitBtn.value;
+        submitBtn.value = 'Guardando...';
+        submitBtn.disabled = true;
+        
+        // Restaurar botón si hay error
+        setTimeout(function() {
+            submitBtn.value = originalText;
+            submitBtn.disabled = false;
+        }, 10000);
+    });
+});
+</script>
+{% endblock %}
