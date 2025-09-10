@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "nombre": "jean basta",
+    "cantidad": 25,
+    "precio": 58.0,
+    "imagen": "34cc5788707f4b83bb3c77382b1e80c3.jpg",
+    "fecha_creacion": "2025-09-10T00:49:35.398305"
+  },
+  {
+    "id": 4,
+    "nombre": "jaeb azul",
+    "cantidad": 25,
+    "precio": 52.0,
+    "imagen": "caacf7ba4b324248aff6b564911dc5bc.jpg",
+    "fecha_creacion": "2025-09-10T00:49:50.190878"
+  },
+  {
+    "id": 1,
+    "nombre": "ropa",
+    "cantidad": 25,
+    "precio": 452.0,
+    "imagen": "216d74ee74b84ce19f6d2880d6d3a8a3.jpg",
+    "fecha_creacion": "2025-09-10T01:23:44.661370"
+  },
+  {
+    "id": 2,
+    "nombre": "jean",
+    "cantidad": 45,
+    "precio": 56.0,
+    "imagen": "0f4f4ff1b9b1458ba4fb4a11aa2281c1.jpg",
+    "fecha_creacion": "2025-09-10T01:24:01.024832"
+  },
+  {
+    "id": 3,
+    "nombre": "jean negro",
+    "cantidad": 50,
+    "precio": 65.0,
+    "imagen": "6faca2c975c9469182ea914b0e9fa35e.jpg",
+    "fecha_creacion": "2025-09-10T12:33:31.385401"
+  },
+  {
+    "id": 1,
+    "nombre": "Jean azul",
+    "cantidad": 25,
+    "precio": 452.0,
+    "imagen": "216d74ee74b84ce19f6d2880d6d3a8a3.jpg",
+    "fecha_creacion": "2025-09-10T12:34:13.465814"
+  }
+]

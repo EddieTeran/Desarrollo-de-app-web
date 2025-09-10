@@ -3,6 +3,7 @@ from flask_wtf.file import FileField, FileAllowed, FileSize
 from wtforms import StringField, IntegerField, DecimalField, SubmitField
 from wtforms.validators import DataRequired, NumberRange, Length
 
+# Formulario para productos con validaciones para cada campo
 class ProductoForm(FlaskForm):
     nombre = StringField('Nombre', validators=[DataRequired(), Length(max=120)])
     cantidad = IntegerField('Cantidad', validators=[DataRequired(), NumberRange(min=0)])
