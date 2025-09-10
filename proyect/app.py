@@ -6,6 +6,10 @@ import os
 from models import db, Producto
 from forms import ProductoForm
 from inventory import Inventario
+from Conexión.conexion import get_db, close_db
+import mysql.connector
+from mysql.connector import Error
+from Conexión.conexion import get_db, close_db, execute_query
 
 # Inicializamos la aplicación Flask
 app = Flask(__name__)
@@ -142,12 +146,53 @@ def editar_producto(pid):
             form.nombre.errors.append(str(e))
     return render_template('products/form.html', title='Editar producto', form=form, modo='editar')
 
-# Eliminar producto
+# Eliminar producto existente
 @app.route('/productos/<int:pid>/eliminar', methods=['POST'])
 def eliminar_producto(pid):
     ok = inventario.eliminar(pid)
     flash('Producto eliminado.' if ok else 'Producto no encontrado.', 'info' if ok else 'warning')
     return redirect(url_for('listar_productos'))
+
+# Ruta de prueba de conexión a MySQL
+@app.route('/test_db')
+def test_db():
+    connection = None
+    try:
+        connection = get_db()
+        if connection and connection.is_connected():
+            cursor = connection.cursor()
+            cursor.execute("SELECT VERSION()")
+            version = cursor.fetchone()
+            cursor.close()
+            port = connection.server_port 
+            return f"""
+            <h1> Conexión exitosa a MySQL</h1>
+            <p><strong>Versión de MySQL:</strong> {version[0]}</p>
+            <p><strong>Puerto:</strong> {port}</p>
+            <p><strong>Estado:</strong> Conectado correctamente</p>
+            <a href="/">Volver al inicio</a>
+            """
+        else:
+            return """
+            <h1> Error de conexión</h1>
+            <p>No se pudo conectar a la base de datos MySQL</p>
+            <a href="/">Volver al inicio</a>
+            """
+    except Error as e:
+        return f"""
+        <h1> Error de conexión</h1>
+        <p><strong>Error:</strong> {str(e)}</p>
+        <a href="/">Volver al inicio</a>
+        """
+    finally:
+        if connection and connection.is_connected():
+            connection.close()
+
+# Manejador para cerrar conexiones al finalizar la app
+@app.teardown_appcontext
+def close_db_connection(error):
+    close_db()
+
 
 if __name__ == '__main__':
     app.run(debug=True)

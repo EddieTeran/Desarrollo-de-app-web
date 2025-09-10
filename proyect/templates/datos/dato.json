@@ -46,5 +46,13 @@
     "precio": 452.0,
     "imagen": "216d74ee74b84ce19f6d2880d6d3a8a3.jpg",
     "fecha_creacion": "2025-09-10T12:34:13.465814"
+  },
+  {
+    "id": 4,
+    "nombre": "jean blanco",
+    "cantidad": 25,
+    "precio": 59.0,
+    "imagen": "1eac5062c29c478f90e03b243d98039d.jpg",
+    "fecha_creacion": "2025-09-10T14:40:05.388651"
   }
 ]
