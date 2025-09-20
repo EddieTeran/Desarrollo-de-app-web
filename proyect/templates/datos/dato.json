@@ -54,5 +54,21 @@
     "precio": 59.0,
     "imagen": "1eac5062c29c478f90e03b243d98039d.jpg",
     "fecha_creacion": "2025-09-10T14:40:05.388651"
+  },
+  {
+    "id": 6,
+    "nombre": "jean al",
+    "cantidad": 25,
+    "precio": 52.0,
+    "imagen": "3d9f5d5ac93e4ddb8af11d42678afc80.jpg",
+    "fecha_creacion": "2025-09-16T22:58:10.041525"
+  },
+  {
+    "id": 7,
+    "nombre": "jean fino",
+    "cantidad": 30,
+    "precio": 68.0,
+    "imagen": "2fef9b9dbbdb4c68a46ad8c82e73052c.jpg",
+    "fecha_creacion": "2025-09-20T11:29:28.081288"
   }
 ]

@@ -1,10 +1,11 @@
 from flask import Flask, render_template, redirect, url_for, flash, request
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from datetime import datetime
 import json
 import csv
 import os
-from models import db, Producto
-from forms import ProductoForm
+from models import db, Producto, Usuario
+from forms import ProductoForm, LoginForm, RegistroForm
 from inventory import Inventario
 from Conexión.conexion import get_db, close_db
 import mysql.connector
@@ -15,12 +16,24 @@ from Conexión.conexion import get_db, close_db, execute_query
 app = Flask(__name__)
 
 # Configuración de base de datos y seguridad
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///inventario.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:000000@localhost:3307/dbcaprichos'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'dev-secret-key'
 
 # Inicializar extensión SQLAlchemy
 db.init_app(app)
+
+# Configurar Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+login_manager.login_message = 'Por favor, inicia sesión para acceder a esta página.'
+login_manager.login_message_category = 'info'
+
+# Función para cargar usuario (requerida por Flask-Login)
+@login_manager.user_loader
+def load_user(user_id):
+    return Usuario.query.get(int(user_id))
 
 # Inyectar la fecha y hora actual en los templates
 @app.context_processor
@@ -152,6 +165,87 @@ def eliminar_producto(pid):
     ok = inventario.eliminar(pid)
     flash('Producto eliminado.' if ok else 'Producto no encontrado.', 'info' if ok else 'warning')
     return redirect(url_for('listar_productos'))
+
+# ==================== RUTAS DE AUTENTICACIÓN ====================
+
+# Ruta para registro de usuarios
+@app.route('/registro', methods=['GET', 'POST'])
+def registro():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    
+    form = RegistroForm()
+    if form.validate_on_submit():
+        try:
+            # Crear nuevo usuario
+            nuevo_usuario = Usuario(
+                username=form.username.data,
+                email=form.email.data,
+                nombre_completo=form.nombre_completo.data
+            )
+            nuevo_usuario.set_password(form.password.data)
+            
+            # Guardar en la base de datos
+            db.session.add(nuevo_usuario)
+            db.session.commit()
+            
+            flash('¡Registro exitoso! Ya puedes iniciar sesión.', 'success')
+            return redirect(url_for('login'))
+            
+        except Exception as e:
+            db.session.rollback()
+            flash('Error al crear la cuenta. Inténtalo de nuevo.', 'error')
+            print(f"Error en registro: {e}")
+    
+    return render_template('auth/registro.html', title='Registro', form=form)
+
+# Ruta para inicio de sesión
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    
+    form = LoginForm()
+    if form.validate_on_submit():
+        # Buscar usuario por username o email
+        usuario = Usuario.get_by_username(form.username.data)
+        if not usuario:
+            usuario = Usuario.get_by_email(form.username.data)
+        
+        if usuario and usuario.check_password(form.password.data):
+            if usuario.is_active():
+                login_user(usuario, remember=form.remember_me.data)
+                
+                # Actualizar último acceso
+                usuario.ultimo_acceso = datetime.utcnow()
+                db.session.commit()
+                
+                next_page = request.args.get('next')
+                if not next_page or not next_page.startswith('/'):
+                    next_page = url_for('index')
+                
+                flash(f'¡Bienvenido, {usuario.nombre_completo}!', 'success')
+                return redirect(next_page)
+            else:
+                flash('Tu cuenta está desactivada. Contacta al administrador.', 'warning')
+        else:
+            flash('Credenciales incorrectas. Verifica tu usuario y contraseña.', 'error')
+    
+    return render_template('auth/login.html', title='Iniciar Sesión', form=form)
+
+# Ruta para cerrar sesión
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('Has cerrado sesión correctamente.', 'info')
+    return redirect(url_for('index'))
+
+# Ruta protegida de ejemplo
+@app.route('/perfil')
+@login_required
+def perfil():
+    return render_template('auth/perfil.html', title='Mi Perfil', usuario=current_user)
 
 # Ruta de prueba de conexión a MySQL
 @app.route('/test_db')

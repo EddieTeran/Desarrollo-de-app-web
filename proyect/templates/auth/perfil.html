@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h4>Mi Perfil</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <div class="mb-3">
+                                <div class="user-avatar bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 2rem;">
+                                    {{ usuario.nombre_completo[0] }}
+                                </div>
+                            </div>
+                            <h5>{{ usuario.nombre_completo }}</h5>
+                            <p class="text-muted">@{{ usuario.username }}</p>
+                        </div>
+                        <div class="col-md-8">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Nombre de Usuario:</strong></td>
+                                    <td>{{ usuario.username }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Correo Electrónico:</strong></td>
+                                    <td>{{ usuario.email }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Nombre Completo:</strong></td>
+                                    <td>{{ usuario.nombre_completo }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Fecha de Registro:</strong></td>
+                                    <td>{{ usuario.fecha_registro.strftime('%d/%m/%Y %H:%M') }}</td>
+                                </tr>
+                                {% if usuario.ultimo_acceso %}
+                                <tr>
+                                    <td><strong>Último Acceso:</strong></td>
+                                    <td>{{ usuario.ultimo_acceso.strftime('%d/%m/%Y %H:%M') }}</td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                    <td><strong>Estado:</strong></td>
+                                    <td>
+                                        {% if usuario.activo %}
+                                            <span class="badge bg-success">Activo</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Inactivo</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">
+                        Volver al Inicio
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">
+                        Cerrar Sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+

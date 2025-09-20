@@ -24,9 +24,13 @@ class Inventario:
     # Carga productos desde base de datos y retorna instancia de Inventario
     @classmethod
     def cargar_desde_bd(cls):
-        productos = Producto.query.all()
-        productos_dict = {p.id: p for p in productos}
-        return cls(productos_dict)
+        try:
+            productos = Producto.query.all()
+            productos_dict = {p.id: p for p in productos}
+            return cls(productos_dict)
+        except Exception as e:
+            print(f"Error cargando productos desde la base de datos: {e}")
+            return cls({})
 
     # Crear carpeta de uploads si no existe
     def _ensure_upload_folder(self):

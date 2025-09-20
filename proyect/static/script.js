@@ -1,246 +1,458 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const addImageBtn = document.getElementById('addImageBtn');
-  const removeImageBtn = document.getElementById('removeImageBtn');
-  const imageUrlInput = document.getElementById('imageUrl');
-  const gallery = document.getElementById('gallery');
+/**
+ * Script principal para Caprichos Store
+ * Funcionalidades: Galería interactiva, formulario de suscripción, catálogo dinámico
+ */
 
-  addImageBtn.addEventListener('click', () => {
-    const imageUrl = imageUrlInput.value.trim();
-    if (imageUrl) {
-      const imgElement = document.createElement('img');
-      imgElement.src = imageUrl;
-      imgElement.alt = 'Imagen de la galería';
-      imgElement.addEventListener('click', () => {
-        const selectedImage = gallery.querySelector('img.selected');
-        if (selectedImage) {
-          selectedImage.classList.remove('selected');
+// ===== CONFIGURACIÓN GLOBAL =====
+const CONFIG = {
+    gallery: {
+        maxImages: 12,
+        defaultImageSize: '200px'
+    },
+    validation: {
+        minPasswordLength: 6,
+        minNameLength: 3,
+        minAge: 18
+    }
+};
+
+// ===== GALERÍA INTERACTIVA =====
+class GalleryManager {
+    constructor() {
+        this.gallery = document.getElementById('gallery');
+        this.addBtn = document.getElementById('addImageBtn');
+        this.removeBtn = document.getElementById('removeImageBtn');
+        this.urlInput = document.getElementById('imageUrl');
+        this.selectedImage = null;
+        
+        this.init();
+    }
+
+    init() {
+        if (this.addBtn) {
+            this.addBtn.addEventListener('click', () => this.addImage());
         }
-        imgElement.classList.add('selected');
-      });
-      gallery.appendChild(imgElement);
-      imageUrlInput.value = '';
-    } else {
-      alert('Por favor, ingresa una URL válida.');
+        if (this.removeBtn) {
+            this.removeBtn.addEventListener('click', () => this.removeSelectedImage());
+        }
+        if (this.urlInput) {
+            this.urlInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    this.addImage();
+                }
+            });
+        }
     }
-  });
 
-  removeImageBtn.addEventListener('click', () => {
-    const selectedImage = gallery.querySelector('img.selected');
-    if (selectedImage) {
-      gallery.removeChild(selectedImage);
-    } else {
-      alert('No hay ninguna imagen seleccionada para eliminar.');
+    addImage() {
+        const imageUrl = this.urlInput.value.trim();
+        
+        if (!imageUrl) {
+            this.showAlert('Por favor, ingresa una URL válida.', 'warning');
+            return;
+        }
+
+        if (this.gallery.children.length >= CONFIG.gallery.maxImages) {
+            this.showAlert(`Máximo ${CONFIG.gallery.maxImages} imágenes permitidas.`, 'warning');
+            return;
+        }
+
+        if (!this.isValidImageUrl(imageUrl)) {
+            this.showAlert('Por favor, ingresa una URL de imagen válida (jpg, png, gif, webp).', 'error');
+            return;
+        }
+
+        this.createImageElement(imageUrl);
+        this.urlInput.value = '';
     }
-  });
-});
 
-document.addEventListener('DOMContentLoaded', function () {
-  const form = document.getElementById('registrationForm');
-  const submitButton = document.getElementById('submitButton');
-
-  const nameInput = document.getElementById('name');
-  const emailInput = document.getElementById('email');
-  const passwordInput = document.getElementById('password');
-  const confirmPasswordInput = document.getElementById('confirmPassword');
-  const ageInput = document.getElementById('age');
-
-  const nameError = document.getElementById('nameError');
-  const emailError = document.getElementById('emailError');
-  const passwordError = document.getElementById('passwordError');
-  const confirmPasswordError = document.getElementById('confirmPasswordError');
-  const ageError = document.getElementById('ageError');
-
-  function validateName() {
-    if (nameInput.value.length < 3) {
-      nameInput.classList.add('invalid');
-      nameInput.classList.remove('valid');
-      nameError.textContent = 'El nombre debe tener al menos 3 caracteres.';
-      nameError.style.display = 'block';
+    isValidImageUrl(url) {
+        try {
+            const urlObj = new URL(url);
+            const validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+            const pathname = urlObj.pathname.toLowerCase();
+            return validExtensions.some(ext => pathname.endsWith(ext));
+        } catch {
       return false;
-    } else {
-      nameInput.classList.remove('invalid');
-      nameInput.classList.add('valid');
-      nameError.style.display = 'none';
-      return true;
+        }
     }
-  }
 
-  function validateEmail() {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(emailInput.value)) {
-      emailInput.classList.add('invalid');
-      emailInput.classList.remove('valid');
-      emailError.textContent = 'Formato de correo electrónico inválido.';
-      emailError.style.display = 'block';
-      return false;
-    } else {
-      emailInput.classList.remove('invalid');
-      emailInput.classList.add('valid');
-      emailError.style.display = 'none';
-      return true;
+    createImageElement(url) {
+        const imgContainer = document.createElement('div');
+        imgContainer.className = 'gallery-item';
+        imgContainer.style.position = 'relative';
+
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = 'Imagen de la galería';
+        img.style.width = '100%';
+        img.style.height = CONFIG.gallery.defaultImageSize;
+        img.style.objectFit = 'cover';
+        img.style.borderRadius = '8px';
+        img.style.cursor = 'pointer';
+        img.style.transition = 'all 0.3s ease';
+
+        img.addEventListener('click', () => this.selectImage(imgContainer, img));
+        img.addEventListener('error', () => this.handleImageError(imgContainer));
+
+        imgContainer.appendChild(img);
+        this.gallery.appendChild(imgContainer);
+
+        // Animación de entrada
+        imgContainer.style.opacity = '0';
+        imgContainer.style.transform = 'scale(0.8)';
+        setTimeout(() => {
+            imgContainer.style.opacity = '1';
+            imgContainer.style.transform = 'scale(1)';
+        }, 100);
     }
-  }
 
-  function validatePassword() {
-    const passwordPattern =
-      /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-    if (!passwordPattern.test(passwordInput.value)) {
-      passwordInput.classList.add('invalid');
-      passwordInput.classList.remove('valid');
-      passwordError.textContent =
-        'La contraseña debe tener al menos 8 caracteres, un número y un carácter especial.';
-      passwordError.style.display = 'block';
-      return false;
-    } else {
-      passwordInput.classList.remove('invalid');
-      passwordInput.classList.add('valid');
-      passwordError.style.display = 'none';
-      return true;
+    selectImage(container, img) {
+        // Remover selección anterior
+        if (this.selectedImage) {
+            this.selectedImage.classList.remove('selected');
+        }
+
+        // Seleccionar nueva imagen
+        this.selectedImage = container;
+        container.classList.add('selected');
+        img.style.border = '3px solid #8e24aa';
+        img.style.boxShadow = '0 0 15px rgba(142, 36, 170, 0.5)';
     }
-  }
 
-  function validateConfirmPassword() {
-    if (confirmPasswordInput.value !== passwordInput.value) {
-      confirmPasswordInput.classList.add('invalid');
-      confirmPasswordInput.classList.remove('valid');
-      confirmPasswordError.textContent = 'Las contraseñas no coinciden.';
-      confirmPasswordError.style.display = 'block';
-      return false;
-    } else {
-      confirmPasswordInput.classList.remove('invalid');
-      confirmPasswordInput.classList.add('valid');
-      confirmPasswordError.style.display = 'none';
-      return true;
+    removeSelectedImage() {
+        if (!this.selectedImage) {
+            this.showAlert('No hay ninguna imagen seleccionada para eliminar.', 'warning');
+            return;
+        }
+
+        this.selectedImage.style.opacity = '0';
+        this.selectedImage.style.transform = 'scale(0.8)';
+        
+        setTimeout(() => {
+            this.selectedImage.remove();
+            this.selectedImage = null;
+        }, 300);
     }
-  }
 
-  function validateAge() {
-    if (ageInput.value < 18) {
-      ageInput.classList.add('invalid');
-      ageInput.classList.remove('valid');
-      ageError.textContent = 'Debes ser mayor de 18 años.';
-      ageError.style.display = 'block';
-      return false;
-    } else {
-      ageInput.classList.remove('invalid');
-      ageInput.classList.add('valid');
-      ageError.style.display = 'none';
-      return true;
+    handleImageError(container) {
+        container.innerHTML = '<div class="error-placeholder">Error al cargar imagen</div>';
+        container.style.background = '#f8f9fa';
+        container.style.display = 'flex';
+        container.style.alignItems = 'center';
+        container.style.justifyContent = 'center';
+        container.style.color = '#6c757d';
+        container.style.fontSize = '0.9rem';
     }
-  }
 
-  function validateForm() {
-    const isValidName = validateName();
-    const isValidEmail = validateEmail();
-    const isValidPassword = validatePassword();
-    const isValidConfirmPassword = validateConfirmPassword();
-    const isValidAge = validateAge();
+    showAlert(message, type = 'info') {
+        // Crear elemento de alerta
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type} alert-dismissible fade show`;
+        alert.style.position = 'fixed';
+        alert.style.top = '20px';
+        alert.style.right = '20px';
+        alert.style.zIndex = '9999';
+        alert.style.minWidth = '300px';
+        
+        alert.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
 
-    submitButton.disabled = !(
-      isValidName &&
-      isValidEmail &&
-      isValidPassword &&
-      isValidConfirmPassword &&
-      isValidAge
-    );
-  }
+        document.body.appendChild(alert);
 
-  nameInput.addEventListener('input', validateForm);
-  emailInput.addEventListener('input', validateForm);
-  passwordInput.addEventListener('input', validateForm);
-  confirmPasswordInput.addEventListener('input', validateForm);
-  ageInput.addEventListener('input', validateForm);
-
-  form.addEventListener('submit', function (event) {
-    event.preventDefault();
-    if (submitButton.disabled) return;
-    alert('Formulario enviado con éxito.');
-  });
-});
-// plantillas dinamicas
-
-// Arreglo de productos
-const products = [
-  {
-    name: 'Producto 1',
-    price: 10.99,
-    description: 'Descripción breve del producto 1.',
-  },
-  {
-    name: 'Producto 2',
-    price: 15.49,
-    description: 'Descripción breve del producto 2.',
-  },
-  {
-    name: 'Producto 3',
-    price: 7.99,
-    description: 'Descripción breve del producto 3.',
-  },
-];
-
-// Función para renderizar la lista de productos
-const initialProducts = [
-  {
-    nombre: 'Vestido',
-    talla: 'M',
-    precio: '$39.99',
-  },
-  {
-    nombre: 'Blusa',
-    talla: 'S',
-    precio: '$19.99',
-  },
-  {
-    nombre: 'Jean',
-    talla: 'L',
-    precio: '$49.99',
-  },
-];
-
-// Función para renderizar la lista de productos
-function renderProducts(products) {
-  const productList = document.getElementById('product-list');
-  productList.innerHTML = ''; // Limpiar elementos existentes
-
-  products.forEach((product) => {
-    const li = document.createElement('li');
-    li.className = 'product-item';
-    li.innerHTML = `
-                    <div class="product-name">${product.nombre}</div>
-                    <div class="product-price">${product.precio}</div>
-                    <div class="product-description">${product.talla}</div>
-                `;
-    productList.appendChild(li);
-  });
+        // Auto-remover después de 3 segundos
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.remove();
+            }
+        }, 3000);
+    }
 }
 
-// Función para agregar un nuevo producto aleatorio
-function addNewProduct() {
-  const clothingTypes = ['Jeans', 'Vestido', 'Blusa'];
-  const Talla = ['S', 'M', 'L'];
-  const genders = [''];
+// ===== VALIDADOR DE FORMULARIOS =====
+class FormValidator {
+    constructor() {
+        this.form = document.getElementById('registrationForm');
+        this.submitBtn = document.getElementById('submitButton');
+        this.resetBtn = document.getElementById('resetButton');
+        
+        if (this.form) {
+            this.init();
+        }
+    }
 
-  const randomType =
-    clothingTypes[Math.floor(Math.random() * clothingTypes.length)];
-  const randomTalla = Talla[Math.floor(Math.random() * Talla.length)];
-  const randomGender = genders[Math.floor(Math.random() * genders.length)];
+    init() {
+        this.setupFields();
+        this.setupEventListeners();
+    }
+
+    setupFields() {
+        this.fields = {
+            name: {
+                input: document.getElementById('name'),
+                error: document.getElementById('nameError'),
+                validator: (value) => this.validateName(value)
+            },
+            email: {
+                input: document.getElementById('email'),
+                error: document.getElementById('emailError'),
+                validator: (value) => this.validateEmail(value)
+            },
+            password: {
+                input: document.getElementById('password'),
+                error: document.getElementById('passwordError'),
+                validator: (value) => this.validatePassword(value)
+            },
+            confirmPassword: {
+                input: document.getElementById('confirmPassword'),
+                error: document.getElementById('confirmPasswordError'),
+                validator: (value) => this.validateConfirmPassword(value)
+            },
+            age: {
+                input: document.getElementById('age'),
+                error: document.getElementById('ageError'),
+                validator: (value) => this.validateAge(value)
+            }
+        };
+    }
+
+    setupEventListeners() {
+        // Event listeners para validación en tiempo real
+        Object.values(this.fields).forEach(field => {
+            if (field.input) {
+                field.input.addEventListener('input', () => this.validateField(field));
+                field.input.addEventListener('blur', () => this.validateField(field));
+            }
+        });
+
+        // Event listeners para botones
+        if (this.submitBtn) {
+            this.submitBtn.addEventListener('click', (e) => this.handleSubmit(e));
+        }
+        if (this.resetBtn) {
+            this.resetBtn.addEventListener('click', () => this.resetForm());
+        }
+    }
+
+    validateName(value) {
+        if (value.length < CONFIG.validation.minNameLength) {
+            return `El nombre debe tener al menos ${CONFIG.validation.minNameLength} caracteres.`;
+        }
+        return null;
+    }
+
+    validateEmail(value) {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(value)) {
+            return 'Formato de correo electrónico inválido.';
+        }
+        return null;
+    }
+
+    validatePassword(value) {
+        if (value.length < CONFIG.validation.minPasswordLength) {
+            return `La contraseña debe tener al menos ${CONFIG.validation.minPasswordLength} caracteres.`;
+        }
+        return null;
+    }
+
+    validateConfirmPassword(value) {
+        const password = this.fields.password.input.value;
+        if (value !== password) {
+            return 'Las contraseñas no coinciden.';
+        }
+        return null;
+    }
+
+    validateAge(value) {
+        const age = parseInt(value);
+        if (isNaN(age) || age < CONFIG.validation.minAge) {
+            return `Debes ser mayor de ${CONFIG.validation.minAge} años.`;
+        }
+        return null;
+    }
+
+    validateField(field) {
+        const value = field.input.value;
+        const error = field.validator(value);
+        
+        if (error) {
+            this.showFieldError(field, error);
+      return false;
+    } else {
+            this.clearFieldError(field);
+      return true;
+    }
+  }
+
+    showFieldError(field, message) {
+        field.input.classList.add('invalid');
+        field.input.classList.remove('valid');
+        if (field.error) {
+            field.error.textContent = message;
+            field.error.style.display = 'block';
+        }
+    }
+
+    clearFieldError(field) {
+        field.input.classList.remove('invalid');
+        field.input.classList.add('valid');
+        if (field.error) {
+            field.error.style.display = 'none';
+        }
+    }
+
+    validateForm() {
+        let isValid = true;
+        Object.values(this.fields).forEach(field => {
+            if (!this.validateField(field)) {
+                isValid = false;
+            }
+        });
+        return isValid;
+    }
+
+    updateSubmitButton() {
+        if (this.submitBtn) {
+            const isValid = this.validateForm();
+            this.submitBtn.disabled = !isValid;
+        }
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        
+        if (!this.validateForm()) {
+            this.showAlert('Por favor, corrige los errores en el formulario.', 'error');
+            return;
+        }
+
+        // Simular envío
+        this.showAlert('¡Formulario enviado con éxito!', 'success');
+        this.resetForm();
+    }
+
+    resetForm() {
+        Object.values(this.fields).forEach(field => {
+            field.input.value = '';
+            this.clearFieldError(field);
+        });
+        if (this.submitBtn) {
+            this.submitBtn.disabled = true;
+        }
+    }
+
+    showAlert(message, type = 'info') {
+        // Usar la misma función de alerta que GalleryManager
+        const gallery = new GalleryManager();
+        gallery.showAlert(message, type);
+    }
+}
+
+// ===== CATÁLOGO DINÁMICO =====
+class ProductCatalog {
+    constructor() {
+        this.productList = document.getElementById('product-list');
+        this.addBtn = document.getElementById('add-product');
+        this.products = [
+            { nombre: 'Vestido Elegante', talla: 'M', precio: '$39.99' },
+            { nombre: 'Blusa Casual', talla: 'S', precio: '$19.99' },
+            { nombre: 'Jean Clásico', talla: 'L', precio: '$49.99' }
+        ];
+        
+        if (this.productList && this.addBtn) {
+            this.init();
+        }
+    }
+
+    init() {
+        this.renderProducts();
+        this.addBtn.addEventListener('click', () => this.addRandomProduct());
+    }
+
+    renderProducts() {
+        this.productList.innerHTML = '';
+        
+        this.products.forEach((product, index) => {
+    const li = document.createElement('li');
+            li.className = 'product-item fade-in';
+    li.innerHTML = `
+                <div>
+                    <div class="product-name">${product.nombre}</div>
+                    <div class="product-description">Talla: ${product.talla}</div>
+                </div>
+                    <div class="product-price">${product.precio}</div>
+            `;
+            
+            // Animación de entrada escalonada
+            li.style.animationDelay = `${index * 0.1}s`;
+            
+            this.productList.appendChild(li);
+        });
+    }
+
+    addRandomProduct() {
+        const clothingTypes = ['Vestido', 'Blusa', 'Jean', 'Falda', 'Top'];
+        const sizes = ['S', 'M', 'L', 'XL'];
+        const colors = ['Negro', 'Blanco', 'Azul', 'Rosa', 'Verde'];
+        
+        const randomType = clothingTypes[Math.floor(Math.random() * clothingTypes.length)];
+        const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        const randomPrice = (20 + Math.random() * 50).toFixed(2);
 
   const newProduct = {
-    nombre: `${randomGender}  ${randomType}`,
-    precio: `$${(20 + Math.random() * 50).toFixed(2)}`,
-    talla: `${randomTalla.toUpperCase()}`,
-  };
-
-  initialProducts.push(newProduct);
-  renderProducts(initialProducts);
+            nombre: `${randomColor} ${randomType}`,
+            talla: randomSize,
+            precio: `$${randomPrice}`
+        };
+        
+        this.products.push(newProduct);
+        this.renderProducts();
+        
+        // Scroll suave al nuevo producto
+        const lastItem = this.productList.lastElementChild;
+        lastItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
 }
 
-// Inicializar la página
-document.addEventListener('DOMContentLoaded', () => {
-  renderProducts(initialProducts);
-
-  // Agregar evento al botón
-  document
-    .getElementById('add-product')
-    .addEventListener('click', addNewProduct);
+// ===== INICIALIZACIÓN =====
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar componentes
+    new GalleryManager();
+    new FormValidator();
+    new ProductCatalog();
+    
+    // Agregar animaciones de entrada
+    const elements = document.querySelectorAll('.hero-section, .categories-section, .video-section, .gallery-section, .subscription-section, .catalog-section, .measurements-section');
+    elements.forEach((element, index) => {
+        element.classList.add('fade-in');
+        element.style.animationDelay = `${index * 0.2}s`;
+    });
+    
+    // Smooth scroll para enlaces internos
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    console.log('🎉 Caprichos Store - Script cargado correctamente');
 });
+
+// ===== UTILIDADES GLOBALES =====
+window.CaprichosStore = {
+    GalleryManager,
+    FormValidator,
+    ProductCatalog,
+    CONFIG
+};

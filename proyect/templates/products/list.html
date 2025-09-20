@@ -8,10 +8,10 @@
         <!-- Header Section -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="mb-0">
-                <i class="fas fa-box text-primary"></i> Inventario de Productos
+                Inventario de Productos
             </h1>
             <a class="btn btn-primary" href="{{ url_for('crear_producto') }}">
-                <i class="fas fa-plus"></i> Nuevo Producto
+                Nuevo Producto
             </a>
         </div>
 
@@ -22,7 +22,7 @@
                     <div class="col-md-8">
                         <div class="input-group">
                             <span class="input-group-text">
-                                <i class="fas fa-search"></i>
+                                🔍
                             </span>
                             <input type="text" 
                                    name="q" 
@@ -34,10 +34,10 @@
                     <div class="col-md-4">
                         <div class="d-grid gap-2 d-md-flex">
                             <button type="submit" class="btn btn-outline-primary flex-fill">
-                                <i class="fas fa-search"></i> Buscar
+                                Buscar
                             </button>
                             <a href="{{ url_for('listar_productos') }}" class="btn btn-outline-secondary">
-                                <i class="fas fa-times"></i> Limpiar
+                                Limpiar
                             </a>
                         </div>
                     </div>
@@ -50,7 +50,6 @@
             <div class="card">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">
-                        <i class="fas fa-list"></i> 
                         Lista de Productos 
                         <span class="badge bg-light text-dark">{{ productos|length }}</span>
                     </h5>
@@ -61,22 +60,22 @@
                             <thead class="table-dark">
                                 <tr>
                                     <th scope="col">
-                                        <i class="fas fa-image"></i> Imagen
+                                        Imagen
                                     </th>
                                     <th scope="col">
-                                        <i class="fas fa-hashtag"></i> ID
+                                        ID
                                     </th>
                                     <th scope="col">
-                                        <i class="fas fa-tag"></i> Nombre
+                                        Nombre
                                     </th>
                                     <th scope="col" class="text-center">
-                                        <i class="fas fa-cubes"></i> Cantidad
+                                        Cantidad
                                     </th>
                                     <th scope="col" class="text-center">
-                                        <i class="fas fa-dollar-sign"></i> Precio
+                                        Precio
                                     </th>
                                     <th scope="col" class="text-center">
-                                        <i class="fas fa-cogs"></i> Acciones
+                                        Acciones
                                     </th>
                                 </tr>
                             </thead>
@@ -113,7 +112,7 @@
                                             <a class="btn btn-outline-primary btn-sm" 
                                                href="{{ url_for('editar_producto', pid=p.id) }}"
                                                title="Editar producto">
-                                                <i class="fas fa-edit"></i> Editar
+                                                Editar
                                             </a>
                                             <form method="post" 
                                                   action="{{ url_for('eliminar_producto', pid=p.id) }}" 
@@ -122,7 +121,7 @@
                                                 <button type="submit" 
                                                         class="btn btn-outline-danger btn-sm"
                                                         title="Eliminar producto">
-                                                    <i class="fas fa-trash"></i> Eliminar
+                                                    Eliminar
                                                 </button>
                                             </form>
                                         </div>
@@ -135,7 +134,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="imageModalLabel{{ p.id }}">
-                                                    <i class="fas fa-image"></i> {{ p.nombre }}
+                                                    {{ p.nombre }}
                                                 </h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
@@ -152,10 +151,10 @@
                                                 </div>
                                                 <div>
                                                     <a href="{{ url_for('editar_producto', pid=p.id) }}" class="btn btn-primary btn-sm">
-                                                        <i class="fas fa-edit"></i> Editar Producto
+                                                        Editar Producto
                                                     </a>
                                                     <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
-                                                        <i class="fas fa-times"></i> Cerrar
+                                                        Cerrar
                                                     </button>
                                                 </div>
                                             </div>
@@ -173,7 +172,7 @@
             <div class="card">
                 <div class="card-body text-center py-5">
                     <div class="mb-4">
-                        <i class="fas fa-box-open fa-4x text-muted"></i>
+                        <div class="empty-state-icon" style="font-size: 4rem; color: #6c757d;">📦</div>
                     </div>
                     <h4 class="text-muted">No hay productos para mostrar</h4>
                     <p class="text-muted mb-4">
@@ -186,11 +185,11 @@
                     <div>
                         {% if q %}
                             <a href="{{ url_for('listar_productos') }}" class="btn btn-outline-primary me-2">
-                                <i class="fas fa-list"></i> Ver todos los productos
+                                Ver todos los productos
                             </a>
                         {% endif %}
                         <a href="{{ url_for('crear_producto') }}" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Agregar primer producto
+                            Agregar primer producto
                         </a>
                     </div>
                 </div>
