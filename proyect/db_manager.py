@@ -1,8 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Script interactivo para gestionar la base de datos dbcaprichos
-"""
+
 
 from flask import Flask
 from models import db, Usuario, Producto
@@ -412,3 +408,5 @@ class DatabaseManager:
 if __name__ == "__main__":
     manager = DatabaseManager()
     manager.run()
+
+

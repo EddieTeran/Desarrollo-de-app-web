@@ -70,5 +70,13 @@
     "precio": 68.0,
     "imagen": "2fef9b9dbbdb4c68a46ad8c82e73052c.jpg",
     "fecha_creacion": "2025-09-20T11:29:28.081288"
+  },
+  {
+    "id": 8,
+    "nombre": "jean gris",
+    "cantidad": 30,
+    "precio": 60.0,
+    "imagen": "5b69d474e6b141e895ccf421fd69f869.jpg",
+    "fecha_creacion": "2025-09-23T00:19:21.847779"
   }
 ]

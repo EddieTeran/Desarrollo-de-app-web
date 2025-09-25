@@ -8,7 +8,6 @@ from models import db, Producto, Usuario
 from forms import ProductoForm, LoginForm, RegistroForm
 from inventory import Inventario
 from Conexión.conexion import get_db, close_db
-import mysql.connector
 from mysql.connector import Error
 from Conexión.conexion import get_db, close_db, execute_query
 
